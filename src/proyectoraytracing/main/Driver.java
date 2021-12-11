@@ -25,7 +25,6 @@ public class Driver {
         
         long start = System.nanoTime();
         
-        Random random = new Random();
         
         int width = 1600;
         int height = 900;
@@ -34,17 +33,28 @@ public class Driver {
         BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         
         Sphere sphere = new Sphere(new Point3D(0,0,0), 60, new Color(1.0F, 0.0F, 0.0F));
+        Random random = new Random();
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
                 //buffer.setRGB(x, y, random.nextInt());
-                Ray ray = new Ray(new Point3D(x-width/2+.5, y-height/2+.5, 100), new Vector3D(0.0, 0.0, -1.0));
-            
-                if(sphere.hit(ray) != 0.0){
-                    buffer.setRGB(x, y, sphere.color.toInteger());
-                }else{
-                    buffer.setRGB(x, y, 0);
+                Color color = new Color(0.0F, 0.0F, 0.0F);
+                
+                for(int row = 0; row < 8 ; row++){
+                    for(int col = 0; col < 8; col++){
+                        
+                        Ray ray = new Ray(new Point3D(new Point3D(0.25*(x-width/2+(col+random.nextFloat())/8), 0.25*(y-height/2+(row+random.nextFloat())/8), 70)),new Vector3D(0.0, 0.0, -1.0));
+                        
+                        if (sphere.hit(ray) != 0.0){
+                            color.add(sphere.color);
+                        }else{
+                        }
+                    }
                 }
+                color.divide(64);
+                buffer.setRGB(x, y, color.toInteger());
+                
+               
             }
         }
         
