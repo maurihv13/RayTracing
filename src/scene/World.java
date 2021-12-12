@@ -6,9 +6,11 @@
 package scene;
 
 import geometry.GeometricObject;
+import geometry.Plane;
 import geometry.Sphere;
 import java.util.ArrayList;
 import utility.Color;
+import utility.Normal;
 import utility.Point3D;
 
 /**
@@ -22,11 +24,14 @@ public class World {
     
     public World(int width, int height, double size){
         viewplane = new ViewPlane(width, height, size);
-        background = new Color(0.0F, 0.0F, 0.0F);
+        background = new Color(0.0F, 1.0F, 1.0F);
     
         objects = new ArrayList<GeometricObject>();
         objects.add(new Sphere(new Point3D(0.0, 0.0, 0.0),50, new Color(1.0F, 0.0F, 0.0F)));
-        
+        objects.add(new Sphere(new Point3D(-150.0, 0.0, 0.0),50, new Color(0.0F, 1.0F, 0.0F)));
+        objects.add(new Sphere(new Point3D(150.0, 0.0, 0.0),50, new Color(0.0F, 0.0F, 1.0F)));
+        objects.add(new Plane(new Point3D(0.0, 0.0, 0.0), new Normal(0.0, 1.0, 0.3), new Color(1.0F, 1.0F, 0.0F)));
+    
     }
     
 }
