@@ -44,7 +44,7 @@ public class Driver {
         tracer = new Tracer();
         sampler = new RegularSample(4);
         projection = new Orthographic();
-        projection = new Perspective(new Point3D(0.0,0.0,600), new Point3D(0.0,0.0,0.0), 90.0);
+        projection = new Perspective(new Point3D(-200.0,200.0,600), new Point3D(0.0,0.0,0.0), 90.0);
         for(int y=0;y < world.viewplane.height ; y++){
             for(int x=0; x < world.viewplane.width ; x++){
                 tracer.trace(x, y);

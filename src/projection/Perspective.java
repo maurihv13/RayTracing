@@ -20,7 +20,7 @@ public class Perspective extends Projection{
         this.eye=new Point3D(eye);
         this.lookat = new Point3D(lookat);
         this.distancia=Driver.world.viewplane.height/2/Math.tan(Math.toRadians(FOV));
-        
+        compute_uvw();
     }
     @Override
     public Ray createRay(Point2D point){
