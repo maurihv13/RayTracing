@@ -54,6 +54,9 @@ public class Vector3D {
         return x*normal.x + y*normal.y + z*normal.z;
     }
     
+    public Vector3D cross(Vector3D vector){
+        return new Vector3D(this.y*vector.z-this.z*vector.y,this.z*vector.x-this.x*vector.z,this.x*vector.y-this.y*vector.x);
+    }
     public void normalize(){
         double magnitude = Math.sqrt(x*x + y*y + z*z);
         
