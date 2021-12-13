@@ -26,7 +26,7 @@ public abstract class Projection {
         w.normalize();
         
         Vector3D up = new Vector3D(0.00424,1.0,0.00764);
-        u = up.cross(w);
+        u = up.cross(w); //este cross no aparece en el vector3D
         u.normalize();
         
         v = w.cross(u);
