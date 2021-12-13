@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Random;
 import javax.imageio.ImageIO;
-import projection.Orthographic;
+//import projection.Orthographic;
 import projection.Perspective;
 import projection.Projection;
 import sampling.RegularSample;
@@ -43,8 +43,8 @@ public class Driver {
         image = new Image("Image.png");
         tracer = new Tracer();
         sampler = new RegularSample(4);
-        projection = new Orthographic();
-        projection = new Perspective(new Point3D(-200.0,200.0,600), new Point3D(0.0,0.0,0.0), 90.0);
+        //projection = new Orthographic();
+        projection = new Perspective(new Point3D(-200.0,200.0,600), new Point3D(0.0,0.0,0.0), 150);
         for(int y=0;y < world.viewplane.height ; y++){
             for(int x=0; x < world.viewplane.width ; x++){
                 tracer.trace(x, y);
