@@ -14,7 +14,7 @@ import utility.Ray;
  * @author MAURICIO
  */
 public class Sphere extends GeometricObject{
-    public Point3D center;
+    public Point3D center;  //en ahi usan vector en vez de punto
     public double radius;
     
     public Sphere(Point3D center, double radius, Color color){
@@ -41,4 +41,9 @@ public class Sphere extends GeometricObject{
             }
         }
     }
+    /*
+    public Point3D getNormal(Point3D pi) {//implementare suma resta divicion en vector
+        return new Point3D(center-pi/radius);//o seria en punto?
+    }
+    */
 }

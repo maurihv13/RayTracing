@@ -46,11 +46,11 @@ public class Color {
         return (int)(r*255)<<16|(int)(g*255)<<8|(int)(b*255);
     }
     
-    public Color setCol(float d){ //en el otro lo define con double
+    public Color setColM(float d){ //en el otro lo define con double
         return new Color(r*d,g*d,b*d);
     }
     
-    public Color setColSum(float d){
-        return new Color(r+d,g+d,b+d);
+    public Color setColSum(float d){//esto lo hace en si con un color
+        return new Color(r+d,g+d,b+d);//solo sube R=red
     }
 }
