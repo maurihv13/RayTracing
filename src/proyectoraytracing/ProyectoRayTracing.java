@@ -36,7 +36,7 @@ public class ProyectoRayTracing {
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
-                
+                buffer.setRGB(x, y, 0);
             }
         }
         
