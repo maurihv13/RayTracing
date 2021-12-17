@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import utility.Color;
+import utility.Vector3D;
 
 /**
  *
@@ -29,19 +30,21 @@ public class ProyectoRayTracing {
         
         BufferedImage buffer;
         File image;
-        Color color = new Color(0.0F, 0.0F, 0.0F);
-        
+        Color color = new Color(0.0F, 0.0F, 0.0F,0.0F); //color tiene un 
+                                                      //atributo special  
         String filename = "Image.png";
         image = new File(filename);
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     
+        Vector3D lookAt=new Vector3D(0,0,0);
+        Vector3D diff_btw=new Vector3D();
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
                 if((x > 200 && x < 440) && (y > 200 && y < 280)){
-                    color = new Color(23, 222, 10);
+                    color = new Color(23, 222, 10,00);
                 }else{
-                    color = new Color(0, 0, 0);
+                    color = new Color(0, 0, 0,0);
                 }
                 buffer.setRGB(x, y, color.toInteger());
             }

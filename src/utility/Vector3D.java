@@ -50,4 +50,21 @@ public class Vector3D {
         y /= magnitude;
         z /= magnitude;
     }
+    
+    /*public double getVectX(){return x;}
+    public double getVecty(){return y;}
+    public double getVectZ(){return z;}
+    */
+    public Vector3D negative(){
+        return new Vector3D(-x, -y, -z);
+    }
+    
+    public Vector3D cross(Vector3D vector){
+        return new Vector3D(y*vector.z-z*vector.y,z*vector.x-x*vector.z,x*vector.y-y*vector.x );
+    }
+    
+    public Vector3D mult (double scalar){
+        return new Vector3D(x*scalar, y*scalar, z*scalar);
+    }
+    
 }
