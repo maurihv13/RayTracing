@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import utility.Color;
 
 /**
  *
@@ -23,11 +24,12 @@ public class ProyectoRayTracing {
         long start = System.nanoTime();
         
         int height, width;
-        height = 900;
-        width = 1600;
+        height = 480;
+        width = 640;
         
         BufferedImage buffer;
         File image;
+        Color color = new Color(0.0F, 0.0F, 0.0F);
         
         String filename = "Image.png";
         image = new File(filename);
@@ -36,7 +38,12 @@ public class ProyectoRayTracing {
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
-                buffer.setRGB(x, y, 0);
+                if((x > 200 && x < 440) && (y > 200 && y < 280)){
+                    color = new Color(23, 222, 10);
+                }else{
+                    color = new Color(0, 0, 0);
+                }
+                buffer.setRGB(x, y, color.toInteger());
             }
         }
         
