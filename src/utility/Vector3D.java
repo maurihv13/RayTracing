@@ -70,4 +70,8 @@ public class Vector3D {
         return new Vector3D(x*scalar, y*scalar, z*scalar);
     }
     
+    public double magnitude(){
+        return Math.sqrt(x*x + y*y + z*z);
+    }
+    
 }

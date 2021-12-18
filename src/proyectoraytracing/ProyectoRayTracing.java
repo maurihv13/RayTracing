@@ -7,6 +7,7 @@ package proyectoraytracing;
 
 import geometry.Plane;
 import geometry.Sphere;
+import geometry.Object;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import utility.Camera;
 import utility.Color;
 import utility.Light;
 import utility.Ray;
+import utility.Source;
 import utility.Vector3D;
 
 /**
@@ -34,9 +36,12 @@ public class ProyectoRayTracing {
         height = 480;
         width = 640;
         double aspectratio = (double)width/ (double)height; 
+        double ambientlight = 0.2;
+        double accuracy = 0.000001;
+        
         BufferedImage buffer;
         File image;
-        Color color = new Color(0.0F, 0.0F, 0.0F,0.0F); //color tiene un 
+        Color color = new Color(0.0F, 0.0F, 0.0F, 0.0F); //color tiene un 
                                                       //atributo special 
         String filename = "Image.png";
         image = new File(filename);
@@ -66,12 +71,14 @@ public class ProyectoRayTracing {
         
         Vector3D light_pos= new Vector3D(-7, 10, -10);
         Light scene_light=new Light(light_pos, white_light);
+        ArrayList<Source> light_sources = new ArrayList<>(); //Guarda luces de escena
+        light_sources.add(scene_light);
         
         //scene objects
-        Sphere scene_sphere=new Sphere(O, 1, pretty_green);
-        Plane scene_plane= new Plane(Y, -1, maroon);
+        Sphere scene_sphere = new Sphere(O, 1, pretty_green);
+        Plane scene_plane = new Plane(Y, -1, maroon);
         
-        ArrayList<Object> scene_objects=new ArrayList<>();
+        ArrayList<Object> scene_objects = new ArrayList<>();
         scene_objects.add(scene_sphere);
         scene_objects.add(scene_plane);
         
@@ -105,26 +112,31 @@ public class ProyectoRayTracing {
                 
                 ArrayList<Double> intersections= new ArrayList();
                 for(int index=0;index<scene_objects.size();index++){ //aplicar polimorfismo aqui
-                    if(scene_objects.get(index) instanceof Plane){
-                        Plane p=(Plane) scene_objects.get(index);
-                        intersections.add(p.findIntersection(cam_ray));
-                    }else{
-                        if(scene_objects.get(index) instanceof Sphere){
-                            Sphere s=(Sphere) scene_objects.get(index);
-                            intersections.add(s.findIntersection(cam_ray));
-                        }
-                    }
+                    Object o = scene_objects.get(index);
+                    intersections.add(o.findIntersection(cam_ray)); //Necesario importar clase para que funcione
                     
                 }
                 
                 int index_of_winning_object = winningObjectIndex(intersections);
                 
-                if((x > 200 && x < 440) && (y > 200 && y < 280)){
-                    color = new Color(23, 222, 10,00);
+                if(index_of_winning_object == -1){
+                    color = new Color(0, 0, 0, 0); //Dibuja background, Color Negro definido
                 }else{
-                    color = new Color(0, 0, 0,0);
+                    if(intersections.get(index_of_winning_object) > accuracy){
+                        //Controla un cierto nivel de error con accuracy
+                        Vector3D intersection_position = cam_ray_origin.add(cam_ray_direction.mult(intersections.get(index_of_winning_object)));//Metodos con diferentes nombres
+                        Vector3D intersecting_ray_direction = cam_ray_direction;
+                        
+                        Color intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
+                        
+                        
+                        //color = intersection_color;
+                    }
+                    
                 }
-                buffer.setRGB(x, y, color.toInteger());
+                y = height - y; // Parche: Para corregir el sentido en imagen dibujada
+                
+                if(y >= 0 && y < height)buffer.setRGB(x, y, color.toInteger()); //Dibuja en buffer, pregunta si y no excede limite (por parche)
             }
         }
         
@@ -187,4 +199,64 @@ public class ProyectoRayTracing {
         }
         
     }
+    
+    public static Color getColorAt(Vector3D intersection_position, Vector3D intersecting_ray_direction, ArrayList<Object> scene_objects, int index_of_winning_object, ArrayList<Source> light_sources, double accuracy, double ambientlight){
+        //Es la forma de implementar sombras y efectos de luz.
+        Color winning_object_color = scene_objects.get(index_of_winning_object).getColor();
+        Vector3D winning_object_normal = scene_objects.get(index_of_winning_object).getNormalAt(intersection_position);
+        
+        Color final_color = winning_object_color.colorScalar(ambientlight);
+        
+        for(int light_index = 0; light_index < light_sources.size(); light_index++){
+            Vector3D light_direction = light_sources.get(light_index).getLigthPosition().add(intersection_position.negative()).normalize();
+            
+            float cosine_angle = (float)winning_object_normal.dot(light_direction);
+            
+            if(cosine_angle > 0){
+                boolean shadowed = false;
+                
+                Vector3D distance_to_light = light_sources.get(light_index).getLigthPosition().add(intersection_position.negative()).normalize();
+                float distance_to_light_magnitude = (float)distance_to_light.magnitude();
+                
+                Ray shadow_ray = new Ray(intersection_position, light_sources.get(light_index).getLigthPosition().add(intersection_position.negative()).normalize());
+            
+                ArrayList<Double> secondary_intersections = new ArrayList<>();
+                
+                for(int object_index = 0; object_index < scene_objects.size() && !shadowed ; object_index++){
+                    secondary_intersections.add(scene_objects.get(object_index).findIntersection(shadow_ray));
+                }
+                
+                for(int c = 0; c < secondary_intersections.size(); c++){
+                    if(secondary_intersections.get(c) > accuracy){
+                        if(secondary_intersections.get(c) <= distance_to_light_magnitude){
+                            shadowed = true;
+                        }
+                    }
+                    break;
+                }
+                if(!shadowed){
+                    final_color = final_color.colorAdd(winning_object_color.colorMultiply(light_sources.get(light_index).getLightColor().colorScalar(cosine_angle)));
+                    
+                    if(winning_object_color.special > 0 && winning_object_color.special <= 1){
+                        //special entre rango 0-1
+                        double dot1 =  winning_object_normal.dot(intersecting_ray_direction.negative());
+                        Vector3D scalar1 = winning_object_normal.mult(dot1);
+                        Vector3D add1 = scalar1.add(intersecting_ray_direction);
+                        Vector3D scalar2 = add1.mult(2);
+                        Vector3D add2 = intersecting_ray_direction.negative().add(scalar2);
+                        Vector3D reflection_direction = add2.normalize();
+                        
+                        
+                        double specular = reflection_direction.dot(light_direction);
+                        if(specular > 0){
+                            specular = Math.pow(specular, 10);
+                            final_color = final_color.colorAdd(light_sources.get(light_index).getLightColor().colorScalar(specular*winning_object_color.special));
+                        }
+                    }
+                }
+            }
+        }
+        return final_color;
+    }
+                        
 }

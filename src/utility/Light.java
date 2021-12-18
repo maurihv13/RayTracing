@@ -9,7 +9,7 @@ package utility;
  *
  * @author Fred
  */
-public class Light {
+public class Light extends Source{
     public Vector3D position;
     public Color    color;
     
@@ -27,10 +27,14 @@ public class Light {
         return position;
     }
 
+    @Override
     public Color getColor() {
         return color;
     }
     
-    
+    @Override
+    public Color getLightColor(){
+        return color;
+    }
     
 }
