@@ -130,7 +130,7 @@ public class ProyectoRayTracing {
                         Color intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
                         
                         
-                        //color = intersection_color;
+                        color = intersection_color;
                     }
                     
                 }
