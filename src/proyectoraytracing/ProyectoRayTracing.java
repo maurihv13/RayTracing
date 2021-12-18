@@ -5,6 +5,7 @@
  */
 package proyectoraytracing;
 
+import geometry.Sphere;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class ProyectoRayTracing {
         String filename = "Image.png";
         image = new File(filename);
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        
+        Vector3D O=new Vector3D(0, 0, 0);
         Vector3D X=new Vector3D(1, 0, 0);
         Vector3D Y=new Vector3D(0, 1, 0);
         Vector3D Z=new Vector3D(0, 0, 1);
@@ -62,6 +63,8 @@ public class ProyectoRayTracing {
         Vector3D light_pos= new Vector3D(-7, 10, -10);
         Light scene_light=new Light(light_pos, white_light);
         
+        //scene objects
+        Sphere scene_sphere=new Sphere(O, 1, pretty_green);
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
