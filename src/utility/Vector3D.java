@@ -43,12 +43,15 @@ public class Vector3D {
     }
     
     
-    public void normalize(){
+    public Vector3D normalize(){
+        Vector3D res;
         double magnitude = Math.sqrt(x*x + y*y + z*z);
         
         x /= magnitude;
         y /= magnitude;
         z /= magnitude;
+        res = new Vector3D(x, y, z);
+        return res;
     }
     
     /*public double getVectX(){return x;}

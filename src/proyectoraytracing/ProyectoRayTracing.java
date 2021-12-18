@@ -9,7 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import utility.Camera;
 import utility.Color;
+import utility.Light;
 import utility.Vector3D;
 
 /**
@@ -31,13 +33,35 @@ public class ProyectoRayTracing {
         BufferedImage buffer;
         File image;
         Color color = new Color(0.0F, 0.0F, 0.0F,0.0F); //color tiene un 
-                                                      //atributo special  
+                                                      //atributo special 
         String filename = "Image.png";
         image = new File(filename);
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    
+        
+        Vector3D X=new Vector3D(1, 0, 0);
+        Vector3D Y=new Vector3D(0, 1, 0);
+        Vector3D Z=new Vector3D(0, 0, 1);
+        
+        Vector3D campos = new Vector3D(3, 1.5, -4);
+        
         Vector3D lookAt=new Vector3D(0,0,0);
-        Vector3D diff_btw=new Vector3D();
+        Vector3D diff_btw=new Vector3D(campos.x-lookAt.x,campos.y-lookAt.y,campos.z-lookAt.z);
+        
+        //crea mas verctores no entiendo para que minuto 30 aprox
+        Vector3D camdir=diff_btw.negative().normalize();
+        Vector3D camright=Y.cross(camdir).normalize();
+        Vector3D camdown = camright.cross(camdir);
+        
+        Camera scene_cam = new Camera(campos, camdir, camright, camdown);
+        
+        Color white_light= new Color(1.0F,1.0F,1.0F,0);
+        Color pretty_green=new Color(0.5F,1.0F,0.5F,0.3F);
+        Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
+        Color black = new Color(0.0F,0.0F,0.0F,0);
+        
+        Vector3D light_pos= new Vector3D(-7, 10, -10);
+        Light scene_light=new Light(light_pos, white_light);
+        
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
