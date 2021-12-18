@@ -25,4 +25,13 @@ public class Camera {
         camrigth = rigth;
         camdown = down;
     }
+    //metodos de la camara 
+    public Vector3D getCameraPos(){return campos;}
+    
+    public Vector3D getCameraDirection(){return camdir;}
+    
+    public Vector3D getCameraRigth(){return camrigth;}
+    
+    public Vector3D getCameraDown(){return camdown;}
+    
 }
