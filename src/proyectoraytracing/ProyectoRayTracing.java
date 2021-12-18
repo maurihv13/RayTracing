@@ -117,6 +117,8 @@ public class ProyectoRayTracing {
                     
                 }
                 
+                int index_of_winning_object = winningObjectIndex(intersections);
+                
                 if((x > 200 && x < 440) && (y > 200 && y < 280)){
                     color = new Color(23, 222, 10,00);
                 }else{
@@ -138,5 +140,51 @@ public class ProyectoRayTracing {
         long end = System.nanoTime();
         System.out.println("Loop Time: "+ (end-start)/1000000000.0F);
     }
-    
+    public static int winningObjectIndex(ArrayList<Double> object_intersections){
+        
+        //return the index of the winnig intersection 40:00
+        int index_of_minimum_value =0;
+        
+        //prevent unnessary calculations
+        if(object_intersections.size()==0){
+            //if there are no intersections
+            return -1;
+        }else{
+            if(object_intersections.size()==1){
+                if(object_intersections.get(0)>0){
+                    //if that intersection is greater than zero then its our index of minimun value   
+                    return 0;
+                }else{
+                    //otherwise the only intersection value is negative
+                    return -1;
+                }
+            }else{
+                //otherwise there is more than intersection
+                //first find the maximum value
+                
+                double max =0;
+                for (int algo = 0;algo<object_intersections.size();algo++){
+                    if(max<object_intersections.get(algo)){
+                        max =object_intersections.get(algo);
+                    }else{}
+                }
+                //then starting from the maximum value find the minimum positive
+                if (max >0){
+                    //we only want positive intersections
+                    for(int indice=0;indice<object_intersections.size();indice++){
+                        if (object_intersections.get(indice) > 0 && object_intersections.get(indice)<=max){
+                            max = object_intersections.get(indice);
+                            index_of_minimum_value= indice;
+                        }else{}
+                    }
+                    return index_of_minimum_value;
+                }else{
+                    //all the intersections were negative
+                    return -1;
+                }
+                
+            }
+        }
+        
+    }
 }
