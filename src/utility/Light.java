@@ -22,6 +22,14 @@ public class Light {
         this.position=position;
         this.color=color;
     }
+
+    public Vector3D getPosition() {
+        return position;
+    }
+
+    public Color getColor() {
+        return color;
+    }
     
     
     
