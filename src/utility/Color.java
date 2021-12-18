@@ -10,7 +10,7 @@ package utility;
  * @author MAURICIO
  */
 public class Color {
-    public float r, g, b,special;
+    public float r, g, b, special;
     
     public Color(){
         r = 0.0F;
