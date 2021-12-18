@@ -9,11 +9,10 @@ import utility.*;
  *
  * @author Fred
  */
-public class Sphere {
+public class Sphere extends Object{ //debe ser hijo de la clase Object
     public Vector3D center;
     public double radius;
-    public Color color;
-
+    
     public Sphere() {
         center= new Vector3D(0, 0, 0);
         radius=1.0;
@@ -26,7 +25,10 @@ public class Sphere {
         this.color = color;
     }
 
-    
+    @Override
+    public double findIntersection(Ray Ray){
+        return 0.0;
+    }
     
     public Vector3D getCenter() {
         return center;

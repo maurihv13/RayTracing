@@ -6,16 +6,15 @@
 package geometry;
 import utility.*;
 /**
- *
  * @author Fred
  */
-public class Object {
-    public Color getColor(){
+public abstract class Object { //es una superClase de Sphere (falta transformar
+    public Color color;
+    /*public Color getColor(){
         return new Color(0.0F, 0.0F, 0.0F, 0);
-    }
+    }*/
     
-    public double findIntersection(Ray ray){
-        
-        return 0;
-    }
+    public abstract double findIntersection(Ray ray);
+    
+    
 }
