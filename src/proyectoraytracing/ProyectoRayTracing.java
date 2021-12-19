@@ -51,26 +51,26 @@ public class ProyectoRayTracing {
         Vector3D Y=new Vector3D(0, 1, 0);
         Vector3D Z=new Vector3D(0, 0, 1);
         
-        Vector3D campos = new Vector3D(3, 1.5, -4);
+        Vector3D campos = new Vector3D(3, 1.5, -4); 
         
-        Vector3D lookAt=new Vector3D(0,0,0);
-        Vector3D diff_btw=new Vector3D(campos.x-lookAt.x,campos.y-lookAt.y,campos.z-lookAt.z);
+        Vector3D lookAt = new Vector3D(0,0,0);
+        Vector3D diff_btw = new Vector3D(campos.x-lookAt.x,campos.y-lookAt.y,campos.z-lookAt.z);
         
         //crea mas verctores no entiendo para que minuto 30 aprox
-        Vector3D camdir=diff_btw.negative().normalize();
-        Vector3D camright=Y.cross(camdir).normalize();
+        Vector3D camdir = diff_btw.negative().normalize();
+        Vector3D camright = Y.cross(camdir).normalize();
         Vector3D camdown = camright.cross(camdir);
         
         Camera scene_cam = new Camera(campos, camdir, camright, camdown);
         
-        Color white_light= new Color(1.0F,1.0F,1.0F,0);
-        Color pretty_green=new Color(0.5F,1.0F,0.5F,0.3F);
+        Color white_light= new Color(1.0F, 1.0F, 1.0F, 0);
+        Color pretty_green=new Color(0.5F, 1.0F, 0.5F, 0.3F);
         Color maroon = new Color(0.5F, 0.25F, 0.25F, 0);
         Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
         Color black = new Color(0.0F,0.0F,0.0F,0);
         
-        Vector3D light_pos= new Vector3D(-7, 10, -10);
-        Light scene_light=new Light(light_pos, white_light);
+        Vector3D light_pos = new Vector3D(7, 10, -10);  
+        Light scene_light = new Light(light_pos, white_light);
         ArrayList<Source> light_sources = new ArrayList<>(); //Guarda luces de escena
         light_sources.add(scene_light);
         
@@ -127,10 +127,7 @@ public class ProyectoRayTracing {
                         Vector3D intersection_position = cam_ray_origin.add(cam_ray_direction.mult(intersections.get(index_of_winning_object)));//Metodos con diferentes nombres
                         Vector3D intersecting_ray_direction = cam_ray_direction;
                         
-                        Color intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
-                        
-                        
-                        color = intersection_color;
+                        color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
                     }
                     
                 }
@@ -243,9 +240,8 @@ public class ProyectoRayTracing {
                         Vector3D scalar1 = winning_object_normal.mult(dot1);
                         Vector3D add1 = scalar1.add(intersecting_ray_direction);
                         Vector3D scalar2 = add1.mult(2);
-                        Vector3D add2 = intersecting_ray_direction.negative().add(scalar2);
+                        Vector3D add2 = intersecting_ray_direction.negative().add(scalar2); 
                         Vector3D reflection_direction = add2.normalize();
-                        
                         
                         double specular = reflection_direction.dot(light_direction);
                         if(specular > 0){

@@ -40,12 +40,12 @@ public class Color {
         special=color.special;
     }
     
-    public void add(Color color){
+    /*public void add(Color color){
         r += color.r;
         g += color.g;
         b += color.b;
-        special +=color.special;
-    }
+        //special += color.special;
+    }*/
     
     public void divide(int scalar){
         r /= scalar;

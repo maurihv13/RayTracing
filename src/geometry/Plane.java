@@ -26,6 +26,7 @@ public class Plane extends Object{
         this.color = color;
     }
 
+    @Override
     public Color getColor() {
         return color;
     }
@@ -50,7 +51,7 @@ public class Plane extends Object{
             //el rayo el paralelo al plano
             return -1;
         }else{              
-            double b= normal.dot(ray.getOrigin().add(normal.mult(distance).negative()));
+            double b = normal.dot(ray.getOrigin().add(normal.mult(distance).negative()));
             return -1*b/a;
         }
     }

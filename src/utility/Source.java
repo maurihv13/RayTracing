@@ -18,10 +18,6 @@ public class Source {
         return new Vector3D(0, 0, 0);
     }
     
-    public Color getColor(){
-        return new Color(1, 1, 1, 0);
-    }
-    
     public Color getLightColor(){
         return new Color(1, 1, 1, 0);
     }

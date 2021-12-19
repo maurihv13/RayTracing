@@ -14,9 +14,9 @@ public class Sphere extends Object{ //debe ser hijo de la clase Object
     public double radius;
     
     public Sphere() {
-        center= new Vector3D(0, 0, 0);
-        radius=1.0;
-        color=new Color(0.5F, 0.5F, 0.5F, 0);
+        center = new Vector3D(0, 0, 0);
+        radius = 1.0;
+        color = new Color(0.5F, 0.5F, 0.5F, 0);
     }
 
     public Sphere(Vector3D center, double radius, Color color) {
@@ -68,6 +68,7 @@ public class Sphere extends Object{ //debe ser hijo de la clase Object
         }
     }
     
+    @Override
     public Vector3D getNormalAt(Vector3D point){
         Vector3D normal_Vect = point.add(center.add(center.negative()).normalize());
         return normal_Vect;
@@ -77,6 +78,7 @@ public class Sphere extends Object{ //debe ser hijo de la clase Object
         return center;
     }
 
+    @Override
     public Color getColor() {
         return color;
     }

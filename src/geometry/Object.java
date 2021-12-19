@@ -15,6 +15,7 @@ public abstract class Object { //es una superClase de Sphere (falta transformar
     }
     
     public abstract double findIntersection(Ray ray);
+    
     public Vector3D getNormalAt(Vector3D point){
         return new Vector3D(0, 0, 0);
     }

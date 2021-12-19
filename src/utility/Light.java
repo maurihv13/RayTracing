@@ -19,22 +19,22 @@ public class Light extends Source{
     }
     
     public Light(Vector3D position,Color color){
-        this.position=position;
-        this.color=color;
+        this.position = position;
+        this.color = color;
     }
 
     public Vector3D getPosition() {
         return position;
     }
 
-    @Override
-    public Color getColor() {
-        return color;
-    }
     
     @Override
     public Color getLightColor(){
         return color;
     }
     
+    @Override
+    public Vector3D getLigthPosition(){
+        return position;
+    }
 }
