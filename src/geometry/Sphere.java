@@ -71,7 +71,7 @@ public class Sphere extends Object{ //debe ser hijo de la clase Object
     @Override
     public Vector3D getNormalAt(Vector3D point){
         //normal always points away from the center of a sphere
-        Vector3D normal_Vect = point.add(center.negative().normalize());
+        Vector3D normal_Vect = point.add(center.negative()).normalize();
         return normal_Vect;
     }
     
