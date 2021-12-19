@@ -252,7 +252,7 @@ public class ProyectoRayTracing {
                 }
             }
         }
-        return final_color;
+        return final_color.clip();
     }
                         
 }
