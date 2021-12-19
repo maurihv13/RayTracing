@@ -53,9 +53,9 @@ public class ProyectoRayTracing {
         Vector3D X=new Vector3D(1, 0, 0);
         Vector3D Y=new Vector3D(0, 1, 0);
         Vector3D Z=new Vector3D(0, 0, 1);
-        Vector3D new_sphere_location = new Vector3D(1.75, 0, 0);
+        Vector3D new_sphere_location = new Vector3D(1.75, -0.5, 0);
         
-        Vector3D campos = new Vector3D(3, 1.5, -4); 
+        Vector3D campos = new Vector3D(3, 1.5, 4); 
         
         Vector3D lookAt = new Vector3D(0,0,0);
         Vector3D diff_btw = new Vector3D(campos.x-lookAt.x,campos.y-lookAt.y,campos.z-lookAt.z);
@@ -353,7 +353,7 @@ public class ProyectoRayTracing {
                             shadowed = true;
                         }
                     }
-                    break;
+                    //break; Necesario?
                 }
                 if(!shadowed){
                     final_color = final_color.colorAdd(winning_object_color.colorMultiply(light_sources.get(light_index).getLightColor().colorScalar(cosine_angle)));
