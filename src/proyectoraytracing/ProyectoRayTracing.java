@@ -36,6 +36,8 @@ public class ProyectoRayTracing {
         int height, width;
         height = 480;
         width = 640;
+        int aadepth = 4;
+        double aathreshold = 0.01;
         double aspectratio = (double)width/ (double)height; 
         double ambientlight = 0.2;
         double accuracy = 0.000001;
@@ -87,57 +89,119 @@ public class ProyectoRayTracing {
         scene_objects.add(scene_sphere2);
         scene_objects.add(scene_plane);
         
-        
+        int aa_index;
         double xamnt,yamnt;
+        double[] tempRed, tempGreen, tempBlue;
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
-                //start with no anti-aliasing
-                if (width>height){
-                    //the image is wider than it is tall
-                    xamnt = ((x+0.5)/width)*aspectratio-(((width-height)/(double)height)/2);
-                    yamnt = ((height-y)+0.5)/height;
-                }else{
-                    if (height>width){
-                        //the image is taller than it is wide
-                        xamnt = (x + 0.5)/width;
-                        yamnt = (((height-y) + 0.5)/height)/aspectratio - (((height-width)/(double)width)/2);
+                //start with a blank pixel 
+                tempRed = new double[aadepth*aadepth];
+                tempGreen = new double[aadepth*aadepth];
+                tempBlue = new double[aadepth*aadepth];
+                
+                for(int aax = 0 ; aax < aadepth ; aax++){
+                    for(int aay = 0 ; aay < aadepth ; aay++){
+                        aa_index = aay*aadepth + aax;
+                        if(aadepth==1){
+                            //start with no anti-aliasing
+                            if (width>height){
+                                //the image is wider than it is tall
+                                xamnt = ((x+0.5)/width)*aspectratio-(((width-height)/(double)height)/2);
+                                yamnt = ((height-y)+0.5)/height;
+                            }else{
+                                if (height>width){
+                                    //the image is taller than it is wide
+                                    xamnt = (x + 0.5)/width;
+                                    yamnt = (((height-y) + 0.5)/height)/aspectratio - (((height-width)/(double)width)/2);
+
+                                }else{
+                                    //the imagen is square
+                                    xamnt = (x + 0.5)/width;
+                                    yamnt = ((height-y)+0.5)/height;
+                                }
+                            }
+                        }else{
+                            // - Anti alising
+                            if (width>height){
+                                //the image is wider than it is tall
+                                xamnt = ((x + (double)aax/((double)aadepth - 1))/width)*aspectratio-(((width-height)/(double)height)/2);
+                                yamnt = ((height - y) + (double)aax/((double)aadepth - 1))/height;
+                            }else{
+                                if (height>width){
+                                    //the image is taller than it is wide
+                                    xamnt = (x + (double)aax/((double)aadepth - 1))/width;
+                                    yamnt = (((height-y) + (double)aax/((double)aadepth - 1))/height)/aspectratio - (((height-width)/(double)width)/2);
+
+                                }else{
+                                    //the imagen is square
+                                    xamnt = (x + (double)aax/((double)aadepth - 1))/width;
+                                    yamnt = ((height - y) + (double)aax/((double)aadepth - 1))/height;
+                                }
+                            }
+                        }
                         
-                    }else{
-                        //the imagen is square
-                        xamnt = (x + 0.5)/width;
-                        yamnt = ((height-y)+0.5)/height;
+
+                        Vector3D cam_ray_origin = scene_cam.getCameraPos();
+                        Vector3D cam_ray_direction= camdir.add(camright.mult(xamnt-0.5).add(camdown.mult(yamnt-0.5))).normalize();
+
+                        Ray cam_ray = new Ray(cam_ray_origin,cam_ray_direction);
+
+                        ArrayList<Double> intersections = new ArrayList();
+                        for(int index = 0 ; index < scene_objects.size(); index++){ //aplicar polimorfismo aqui
+                            Object o = scene_objects.get(index);
+                            intersections.add(o.findIntersection(cam_ray)); //Necesario importar clase para que funcione
+                        }
+
+                        int index_of_winning_object = winningObjectIndex(intersections);
+
+                        if(index_of_winning_object == -1){
+                            //color = new Color(0, 0, 0, 0); 
+                            //Dibuja background, Color Negro definido, por defecto
+                            tempRed[aa_index] = 0;
+                            tempGreen[aa_index] = 0;
+                            tempBlue[aa_index] = 0;
+                        }else{
+                            if(intersections.get(index_of_winning_object) > accuracy){
+                                //Controla un cierto nivel de error con accuracy
+                                Vector3D intersection_position = cam_ray_origin.add(cam_ray_direction.mult(intersections.get(index_of_winning_object)));//Metodos con diferentes nombres
+                                Vector3D intersecting_ray_direction = cam_ray_direction;
+
+                                color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
+                                
+                                tempRed[aa_index] = color.r;
+                                tempGreen[aa_index] = color.g;
+                                tempBlue[aa_index] = color.b;
+                            }
+
+                        }
+                        
+                        //promediar el color para antialising
+                        float totalRed = 0;
+                        float totalGreen = 0;
+                        float totalBlue = 0;
+                        
+                        for(int iRed = 0; iRed < aadepth * aadepth ;iRed++){
+                            totalRed += tempRed[iRed]; 
+                        }
+                        for(int iGreen = 0; iGreen < aadepth * aadepth ;iGreen++){
+                            totalGreen += tempGreen[iGreen]; 
+                        }
+                        for(int iBlue = 0; iBlue < aadepth * aadepth ;iBlue++){
+                            totalBlue += tempBlue[iBlue]; 
+                        }
+                        
+                        float avgRed = totalRed/(aadepth*aadepth);
+                        float avgGreen = totalGreen/(aadepth*aadepth);
+                        float avgBlue = totalBlue/(aadepth*aadepth);
+                        
+                        color.r = avgRed; color.g = avgGreen; color.b = avgBlue;
+                        
+                        //y = height - y; // Parche: Para corregir el sentido en imagen dibujada
+
+                        if(y >= 0 && y < height)buffer.setRGB(x, y, color.toInteger()); //Dibuja en buffer, pregunta si y no excede limite (por parche)
                     }
                 }
-                
-                Vector3D cam_ray_origin = scene_cam.getCameraPos();
-                Vector3D cam_ray_direction= camdir.add(camright.mult(xamnt-0.5).add(camdown.mult(yamnt-0.5))).normalize();
-                
-                Ray cam_ray = new Ray(cam_ray_origin,cam_ray_direction);
-                
-                ArrayList<Double> intersections = new ArrayList();
-                for(int index = 0 ; index < scene_objects.size(); index++){ //aplicar polimorfismo aqui
-                    Object o = scene_objects.get(index);
-                    intersections.add(o.findIntersection(cam_ray)); //Necesario importar clase para que funcione
-                }
-                
-                int index_of_winning_object = winningObjectIndex(intersections);
-                
-                if(index_of_winning_object == -1){
-                    color = new Color(0, 0, 0, 0); //Dibuja background, Color Negro definido
-                }else{
-                    if(intersections.get(index_of_winning_object) > accuracy){
-                        //Controla un cierto nivel de error con accuracy
-                        Vector3D intersection_position = cam_ray_origin.add(cam_ray_direction.mult(intersections.get(index_of_winning_object)));//Metodos con diferentes nombres
-                        Vector3D intersecting_ray_direction = cam_ray_direction;
-                        
-                        color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
-                    }
-                    
-                }
-                y = height - y; // Parche: Para corregir el sentido en imagen dibujada
-                
-                if(y >= 0 && y < height)buffer.setRGB(x, y, color.toInteger()); //Dibuja en buffer, pregunta si y no excede limite (por parche)
             }
         }
         
