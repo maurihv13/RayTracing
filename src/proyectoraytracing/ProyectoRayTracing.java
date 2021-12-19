@@ -32,6 +32,7 @@ public class ProyectoRayTracing {
     public static void main(String[] args) {
         long start = System.nanoTime();
         
+        
         int height, width;
         height = 480;
         width = 640;
@@ -56,7 +57,7 @@ public class ProyectoRayTracing {
         Vector3D lookAt = new Vector3D(0,0,0);
         Vector3D diff_btw = new Vector3D(campos.x-lookAt.x,campos.y-lookAt.y,campos.z-lookAt.z);
         
-        //crea mas verctores no entiendo para que minuto 30 aprox
+        
         Vector3D camdir = diff_btw.negative().normalize();
         Vector3D camright = Y.cross(camdir).normalize();
         Vector3D camdown = camright.cross(camdir);
@@ -70,7 +71,7 @@ public class ProyectoRayTracing {
         Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
         Color black = new Color(0.0F,0.0F,0.0F,0);
         
-        Vector3D light_pos = new Vector3D(-7, 10, -10);  
+        Vector3D light_pos = new Vector3D(-9, 10, -10);  
         Light scene_light = new Light(light_pos, white_light);
         ArrayList<Source> light_sources = new ArrayList<>(); //Guarda luces de escena
         light_sources.add(scene_light);
@@ -149,6 +150,12 @@ public class ProyectoRayTracing {
         
         long end = System.nanoTime();
         System.out.println("Loop Time: "+ (end-start)/1000000000.0F);
+        
+        /*
+        delete pixels;
+        t2 = clock();
+        float diff ((float)t2-(float)t1)/1000;
+        */
     }
     public static int winningObjectIndex(ArrayList<Double> object_intersections){
         
@@ -207,11 +214,12 @@ public class ProyectoRayTracing {
             //checkored/title floor pattern
             int square = (int) Math.floor(intersection_position.x)+(int) Math.floor(intersection_position.z);
             if ((square % 2)==0){
-                //black tile
+                //cuadro negro
                 winning_object_color.setColorRed(0);
                 winning_object_color.setColorGreen(0);
                 winning_object_color.setColorBlue(0);
             }else{
+                //cuadro blanco
                 winning_object_color.setColorRed(1);
                 winning_object_color.setColorGreen(1);
                 winning_object_color.setColorBlue(1);
@@ -219,6 +227,40 @@ public class ProyectoRayTracing {
         }else{}
         
         Color final_color = winning_object_color.colorScalar(ambientlight);
+        
+        if(winning_object_color.getSpecial()>0 && winning_object_color.getSpecial()<=1){
+            //reflexion de objetos con intensidad specular
+            double dot1=winning_object_normal.dot(intersecting_ray_direction.negative());
+            
+            Vector3D scalar1= winning_object_normal.mult(dot1);
+            Vector3D add1 =scalar1.add(intersecting_ray_direction);
+            Vector3D scalar2 = add1.mult(2);
+            Vector3D add2 = intersecting_ray_direction.negative().add(scalar2);
+            Vector3D reflection_direction = add2.normalize();
+            
+            Ray reflection_ray = new Ray(intersection_position, reflection_direction);
+            //determina que rayo intersecta primero
+            ArrayList<Double> reflection_intersections=new ArrayList<>();
+            for(int reflection_index=0;reflection_index<scene_objects.size();reflection_index++){
+                reflection_intersections.add(scene_objects.get(reflection_index).findIntersection(reflection_ray));
+            }
+            
+            int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
+            
+            if(index_of_winning_object_with_reflection !=-1){
+                //el rayo de reflexion se perdio
+                if(reflection_intersections.get(index_of_winning_object_with_reflection)>accuracy){
+                    //determina la posicion y direccion en el punto de interseccion
+                    //el rayo solo afecta el color si este refleja algo
+                    Vector3D reflection_intersection_position = intersection_position.add(reflection_direction.mult(reflection_intersections.get(index_of_winning_object_with_reflection)));
+                    Vector3D reflection_intersection_ray_direction = reflection_direction;
+                    
+                    Color reflection_intersection_color = getColorAt(reflection_intersection_position, reflection_intersection_ray_direction, scene_objects, index_of_winning_object_with_reflection, light_sources, accuracy, ambientlight);
+                    
+                    final_color = final_color.colorAdd(reflection_intersection_color.colorScalar(winning_object_color.getSpecial()));
+                }else{}
+            }else{}
+        }else{}
         
         for(int light_index = 0; light_index < light_sources.size(); light_index++){
             Vector3D light_direction = light_sources.get(light_index).getLigthPosition().add(intersection_position.negative()).normalize();
