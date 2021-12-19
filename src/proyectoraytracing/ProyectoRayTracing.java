@@ -110,11 +110,10 @@ public class ProyectoRayTracing {
                 
                 Ray cam_ray = new Ray(cam_ray_origin,cam_ray_direction);
                 
-                ArrayList<Double> intersections= new ArrayList();
-                for(int index=0;index<scene_objects.size();index++){ //aplicar polimorfismo aqui
+                ArrayList<Double> intersections = new ArrayList();
+                for(int index = 0 ; index < scene_objects.size(); index++){ //aplicar polimorfismo aqui
                     Object o = scene_objects.get(index);
                     intersections.add(o.findIntersection(cam_ray)); //Necesario importar clase para que funcione
-                    
                 }
                 
                 int index_of_winning_object = winningObjectIndex(intersections);
