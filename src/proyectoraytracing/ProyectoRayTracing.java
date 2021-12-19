@@ -51,6 +51,7 @@ public class ProyectoRayTracing {
         Vector3D X=new Vector3D(1, 0, 0);
         Vector3D Y=new Vector3D(0, 1, 0);
         Vector3D Z=new Vector3D(0, 0, 1);
+        Vector3D new_sphere_location = new Vector3D(1.75, 0, 0);
         
         Vector3D campos = new Vector3D(3, 1.5, -4); 
         
@@ -66,7 +67,7 @@ public class ProyectoRayTracing {
         
         Color white_light= new Color(1.0F, 1.0F, 1.0F, 0);
         Color pretty_green=new Color(0.5F, 1.0F, 0.5F, 0.3F);
-        Color maroon = new Color(0.5F, 0.25F, 0.25F, 2);
+        Color maroon = new Color(0.5F, 0.25F, 0.25F, 0);
         Color tile_floor = new Color(1,1,1,2);
         Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
         Color black = new Color(0.0F,0.0F,0.0F,0);
@@ -78,10 +79,12 @@ public class ProyectoRayTracing {
         
         //scene objects
         Sphere scene_sphere = new Sphere(O, 1, pretty_green);
-        Plane scene_plane = new Plane(Y, -1,maroon);
+        Sphere scene_sphere2 = new Sphere(new_sphere_location, 0.5, maroon);
+        Plane scene_plane = new Plane(Y, -1,tile_floor);
         
         ArrayList<Object> scene_objects = new ArrayList<>();
         scene_objects.add(scene_sphere);
+        scene_objects.add(scene_sphere2);
         scene_objects.add(scene_plane);
         
         
