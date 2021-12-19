@@ -65,7 +65,7 @@ public class ProyectoRayTracing {
         
         Color white_light= new Color(1.0F, 1.0F, 1.0F, 0);
         Color pretty_green=new Color(0.5F, 1.0F, 0.5F, 0.3F);
-        Color maroon = new Color(0.5F, 0.25F, 0.25F, 0);
+        Color maroon = new Color(0.5F, 0.25F, 0.25F, 2);
         Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
         Color black = new Color(0.0F,0.0F,0.0F,0);
         
@@ -201,6 +201,21 @@ public class ProyectoRayTracing {
         //Es la forma de implementar sombras y efectos de luz.
         Color winning_object_color = scene_objects.get(index_of_winning_object).getColor();
         Vector3D winning_object_normal = scene_objects.get(index_of_winning_object).getNormalAt(intersection_position);
+        
+        if(winning_object_color.getSpecial()==2){
+            //checkored/title floor pattern
+            int square = (int) Math.floor(intersection_position.x)+(int) Math.floor(intersection_position.z);
+            if ((square % 2)==0){
+                //black tile
+                winning_object_color.setColorRed(0);
+                winning_object_color.setColorGreen(0);
+                winning_object_color.setColorBlue(0);
+            }else{
+                winning_object_color.setColorRed(1);
+                winning_object_color.setColorGreen(1);
+                winning_object_color.setColorBlue(1);
+            }
+        }else{}
         
         Color final_color = winning_object_color.colorScalar(ambientlight);
         

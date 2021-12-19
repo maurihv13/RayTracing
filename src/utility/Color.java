@@ -109,4 +109,21 @@ public class Color {
         if(b<0){b=0;}    
         return new Color(r, g, b, special);
     }
+
+    public float getR() {
+        return r;
+    }
+
+    public float getG() {
+        return g;
+    }
+
+    public float getB() {
+        return b;
+    }
+
+    public float getSpecial() {
+        return special;
+    }
+    
 }
