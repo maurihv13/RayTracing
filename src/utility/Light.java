@@ -14,17 +14,13 @@ public class Light extends Source{
     public Color    color;
     
     public Light() {
-        position=new Vector3D(0, 0, 0);
-        color = new Color(1, 1, 1, 0);
+        position = new Vector3D (0, 0, 0);
+        color = new Color (1, 1, 1, 0);
     }
     
     public Light(Vector3D position,Color color){
         this.position = position;
         this.color = color;
-    }
-
-    public Vector3D getPosition() {
-        return position;
     }
 
     

@@ -64,6 +64,7 @@ public class Color {
     public void setColorGreen(float greenValue){
         g = greenValue;
     }
+    
     public void setColorBlue(float blueValue){
         b = blueValue;
     }
@@ -99,7 +100,7 @@ public class Color {
             r = r+excesslight*(r/alllight);
             g = g + excesslight*(g/alllight);
             b = b + excesslight*(b/alllight);
-        }else
+        }
         
         if(r>1){r=1;}    
         if(g>1){g=1;}    

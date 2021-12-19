@@ -49,13 +49,15 @@ public class ProyectoRayTracing {
         String filename = "Image.png";
         image = new File(filename);
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        
         Vector3D O=new Vector3D(0, 0, 0);
         Vector3D X=new Vector3D(1, 0, 0);
         Vector3D Y=new Vector3D(0, 1, 0);
         Vector3D Z=new Vector3D(0, 0, 1);
+        
         Vector3D new_sphere_location = new Vector3D(1.75, -0.5, 0);
         
-        Vector3D campos = new Vector3D(3, 1.5, 4); 
+        Vector3D campos = new Vector3D(3, 1.5, -4); 
         
         Vector3D lookAt = new Vector3D(0,0,0);
         Vector3D diff_btw = new Vector3D(campos.x-lookAt.x,campos.y-lookAt.y,campos.z-lookAt.z);
