@@ -48,7 +48,7 @@ public class Plane extends Object{
         Vector3D ray_direction = ray.getDirection();
         double a = ray_direction.dot(normal);
         if(a==0){
-            //el rayo el paralelo al plano
+            //el rayo es paralelo al plano
             return -1;
         }else{              
             double b = normal.dot(ray.getOrigin().add(normal.mult(distance).negative()));
