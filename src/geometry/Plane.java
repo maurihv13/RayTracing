@@ -39,8 +39,9 @@ public class Plane extends Object{
         return normal;
     }
     
+    @Override
     public Vector3D getNormalAt(Vector3D point){
-        return normal; //raro che
+        return normal; 
     }
     
     @Override
@@ -52,7 +53,7 @@ public class Plane extends Object{
             return -1;
         }else{              
             double b = normal.dot(ray.getOrigin().add(normal.mult(distance).negative()));
-            return -1*b/a;
+            return -1*b/a; //Distancia de origen de rayo hacia nuestra intersec
         }
     }
 }

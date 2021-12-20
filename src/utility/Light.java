@@ -30,7 +30,7 @@ public class Light extends Source{
     }
     
     @Override
-    public Vector3D getLigthPosition(){
+    public Vector3D getLightPosition(){
         return position;
     }
 }

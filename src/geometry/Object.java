@@ -8,7 +8,7 @@ import utility.*;
 /**
  * @author Fred
  */
-public abstract class Object { //es una superClase de Sphere (falta transformar
+public abstract class Object { //es una superClase de Sphere 
     public Color color;
     public Color getColor(){
         return this.color; //Devuelve color de objeto

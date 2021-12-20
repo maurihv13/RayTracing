@@ -46,14 +46,19 @@ public class ProyectoRayTracing {
         File image;
         Color color = new Color(0.0F, 0.0F, 0.0F, 0.0F); //color tiene un 
                                                       //atributo special 
-        String filename = "Image.png";
+        String filename;
+        if(aadepth == 1){
+            filename = "Image_sin_antialising.png";
+        }else{
+            filename = "Image.png";
+        }
         image = new File(filename);
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         
-        Vector3D O=new Vector3D(0, 0, 0);
-        Vector3D X=new Vector3D(1, 0, 0);
-        Vector3D Y=new Vector3D(0, 1, 0);
-        Vector3D Z=new Vector3D(0, 0, 1);
+        Vector3D O = new Vector3D(0, 0, 0);
+        Vector3D X = new Vector3D(1, 0, 0);
+        Vector3D Y = new Vector3D(0, 1, 0);
+        Vector3D Z = new Vector3D(0, 0, 1);
         
         Vector3D new_sphere_location = new Vector3D(1.75, -0.5, 0);
         
@@ -69,8 +74,8 @@ public class ProyectoRayTracing {
         
         Camera scene_cam = new Camera(campos, camdir, camright, camdown);
         
-        Color white_light= new Color(1.0F, 1.0F, 1.0F, 0);
-        Color pretty_green=new Color(0.5F, 1.0F, 0.5F, 0.3F);
+        Color white_light = new Color(1.0F, 1.0F, 1.0F, 0);
+        Color pretty_green = new Color(0.5F, 1.0F, 0.5F, 0.3F);
         Color maroon = new Color(0.5F, 0.25F, 0.25F, 0);
         Color tile_floor = new Color(1,1,1,2);
         Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
@@ -81,7 +86,7 @@ public class ProyectoRayTracing {
         ArrayList<Source> light_sources = new ArrayList<>(); //Guarda luces de escena
         light_sources.add(scene_light);
         
-        //scene objects
+        //Objetos de la escena
         Sphere scene_sphere = new Sphere(O, 1, pretty_green);
         Sphere scene_sphere2 = new Sphere(new_sphere_location, 0.5, maroon);
         Plane scene_plane = new Plane(Y, -1,tile_floor);
@@ -97,6 +102,7 @@ public class ProyectoRayTracing {
         
         for(int y=0;y < height ; y++){
             for(int x=0; x < width ; x++){
+                
                 //start with a blank pixel 
                 tempRed = new double[aadepth*aadepth];
                 tempGreen = new double[aadepth*aadepth];
@@ -150,7 +156,7 @@ public class ProyectoRayTracing {
                         Ray cam_ray = new Ray(cam_ray_origin,cam_ray_direction);
 
                         ArrayList<Double> intersections = new ArrayList();
-                        for(int index = 0 ; index < scene_objects.size(); index++){ //aplicar polimorfismo aqui
+                        for(int index = 0 ; index < scene_objects.size(); index++){
                             Object o = scene_objects.get(index);
                             intersections.add(o.findIntersection(cam_ray)); //Necesario importar clase para que funcione
                         }
@@ -166,7 +172,7 @@ public class ProyectoRayTracing {
                         }else{
                             if(intersections.get(index_of_winning_object) > accuracy){
                                 //Controla un cierto nivel de error con accuracy
-                                Vector3D intersection_position = cam_ray_origin.add(cam_ray_direction.mult(intersections.get(index_of_winning_object)));//Metodos con diferentes nombres
+                                Vector3D intersection_position = cam_ray_origin.add(cam_ray_direction.mult(intersections.get(index_of_winning_object)));
                                 Vector3D intersecting_ray_direction = cam_ray_direction;
 
                                 color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
@@ -177,33 +183,35 @@ public class ProyectoRayTracing {
                             }
 
                         }
-                        
-                        //promediar el color para antialising
-                        float totalRed = 0;
-                        float totalGreen = 0;
-                        float totalBlue = 0;
-                        
-                        for(int iRed = 0; iRed < aadepth * aadepth ;iRed++){
-                            totalRed += tempRed[iRed]; 
-                        }
-                        for(int iGreen = 0; iGreen < aadepth * aadepth ;iGreen++){
-                            totalGreen += tempGreen[iGreen]; 
-                        }
-                        for(int iBlue = 0; iBlue < aadepth * aadepth ;iBlue++){
-                            totalBlue += tempBlue[iBlue]; 
-                        }
-                        
-                        float avgRed = totalRed/(aadepth*aadepth);
-                        float avgGreen = totalGreen/(aadepth*aadepth);
-                        float avgBlue = totalBlue/(aadepth*aadepth);
-                        
-                        color.r = avgRed; color.g = avgGreen; color.b = avgBlue;
-                        
-                        //y = height - y; // Parche: Para corregir el sentido en imagen dibujada
-
-                        if(y >= 0 && y < height)buffer.setRGB(x, y, color.toInteger()); //Dibuja en buffer, pregunta si y no excede limite (por parche)
                     }
                 }
+                
+                //promediar el color para antialising
+                float totalRed = 0;
+                float totalGreen = 0;
+                float totalBlue = 0;
+                        
+                for(int iRed = 0; iRed < aadepth * aadepth ;iRed++){
+                    totalRed += tempRed[iRed]; 
+                }
+                
+                for(int iGreen = 0; iGreen < aadepth * aadepth ;iGreen++){
+                    totalGreen += tempGreen[iGreen]; 
+                }
+                
+                for(int iBlue = 0; iBlue < aadepth * aadepth ;iBlue++){
+                    totalBlue += tempBlue[iBlue]; 
+                }
+                        
+                float avgRed = totalRed/(aadepth*aadepth);
+                float avgGreen = totalGreen/(aadepth*aadepth);
+                float avgBlue = totalBlue/(aadepth*aadepth);
+                        
+                color.r = avgRed; color.g = avgGreen; color.b = avgBlue;
+                        
+                y = height - y; // Parche: Para corregir el sentido en imagen dibujada
+
+                if(y >= 0 && y < height)buffer.setRGB(x, y, color.toInteger()); //Dibuja en buffer, pregunta si y no excede limite (por parche)
             }
         }
         
@@ -228,15 +236,15 @@ public class ProyectoRayTracing {
     public static int winningObjectIndex(ArrayList<Double> object_intersections){
         
         //return the index of the winnig intersection 40:00
-        int index_of_minimum_value =0;
+        int index_of_minimum_value = 0;
         
         //prevent unnessary calculations
-        if(object_intersections.size()==0){
+        if(object_intersections.isEmpty()){
             //if there are no intersections
             return -1;
         }else{
             if(object_intersections.size()==1){
-                if(object_intersections.get(0)>0){
+                if(object_intersections.get(0) > 0){
                     //if that intersection is greater than zero then its our index of minimun value   
                     return 0;
                 }else{
@@ -248,29 +256,27 @@ public class ProyectoRayTracing {
                 //first find the maximum value
                 
                 double max =0;
-                for (int algo = 0;algo<object_intersections.size();algo++){
+                for (int algo = 0; algo<object_intersections.size() ; algo++){
                     if(max<object_intersections.get(algo)){
-                        max =object_intersections.get(algo);
-                    }else{}
+                        max = object_intersections.get(algo);
+                    }
                 }
                 //then starting from the maximum value find the minimum positive
                 if (max >0){
                     //we only want positive intersections
-                    for(int indice=0;indice<object_intersections.size();indice++){
-                        if (object_intersections.get(indice) > 0 && object_intersections.get(indice)<=max){
+                    for(int indice = 0; indice<object_intersections.size() ; indice++){
+                        if (object_intersections.get(indice) > 0 && object_intersections.get(indice) <= max){
                             max = object_intersections.get(indice);
                             index_of_minimum_value= indice;
-                        }else{}
+                        }
                     }
                     return index_of_minimum_value;
                 }else{
                     //all the intersections were negative
                     return -1;
                 }
-                
             }
         }
-        
     }
     
     public static Color getColorAt(Vector3D intersection_position, Vector3D intersecting_ray_direction, ArrayList<Object> scene_objects, int index_of_winning_object, ArrayList<Source> light_sources, double accuracy, double ambientlight){
@@ -331,17 +337,17 @@ public class ProyectoRayTracing {
         }else{}
         
         for(int light_index = 0; light_index < light_sources.size(); light_index++){
-            Vector3D light_direction = light_sources.get(light_index).getLigthPosition().add(intersection_position.negative()).normalize();
+            Vector3D light_direction = light_sources.get(light_index).getLightPosition().add(intersection_position.negative()).normalize();
             
             float cosine_angle = (float)winning_object_normal.dot(light_direction);
             
             if(cosine_angle > 0){
                 boolean shadowed = false;
                 
-                Vector3D distance_to_light = light_sources.get(light_index).getLigthPosition().add(intersection_position.negative()).normalize();
+                Vector3D distance_to_light = light_sources.get(light_index).getLightPosition().add(intersection_position.negative()).normalize();
                 float distance_to_light_magnitude = (float)distance_to_light.magnitude();
                 
-                Ray shadow_ray = new Ray(intersection_position, light_sources.get(light_index).getLigthPosition().add(intersection_position.negative()).normalize());
+                Ray shadow_ray = new Ray(intersection_position, light_sources.get(light_index).getLightPosition().add(intersection_position.negative()).normalize());
             
                 ArrayList<Double> secondary_intersections = new ArrayList<>();
                 

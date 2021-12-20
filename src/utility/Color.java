@@ -94,8 +94,8 @@ public class Color {
     }
     
     public Color clip(){
-        float alllight = r+g+b;
-        float excesslight = alllight -3;
+        float alllight = r + g + b;
+        float excesslight = alllight - 3;
         if (excesslight>0){
             r = r+excesslight*(r/alllight);
             g = g + excesslight*(g/alllight);

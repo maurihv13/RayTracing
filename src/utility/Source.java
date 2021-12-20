@@ -14,7 +14,7 @@ public class Source {
         
     }
     
-    public Vector3D getLigthPosition(){
+    public Vector3D getLightPosition(){
         return new Vector3D(0, 0, 0);
     }
     
