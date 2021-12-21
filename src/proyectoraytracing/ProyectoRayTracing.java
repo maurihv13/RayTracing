@@ -30,6 +30,7 @@ public class ProyectoRayTracing {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
         long start = System.nanoTime();
         
         
@@ -43,21 +44,18 @@ public class ProyectoRayTracing {
         
         BufferedImage buffer;
         File image;
-        Color color = new Color(0.0F, 0.0F, 0.0F, 0.0F); //color tiene un 
-                                                      //atributo special 
+        Color color = new Color(0.0F, 0.0F, 0.0F, 0.0F);
         String filename;
         if(aadepth == 1){
             filename = "Image_sin_antialising.png";
         }else{
             filename = "Image.png";
         }
-        image = new File(filename);
+        image = new File(filename); 
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         
         Vector3D O = new Vector3D(0, 0, 0);
-        Vector3D X = new Vector3D(1, 0, 0);
         Vector3D Y = new Vector3D(0, 1, 0);
-        Vector3D Z = new Vector3D(0, 0, 1);
         
         Vector3D new_sphere_location = new Vector3D(1.5, -0.5, 0);
         Vector3D big_sphere_location = new Vector3D(12, 3, 15);
@@ -79,7 +77,7 @@ public class ProyectoRayTracing {
         Color cyan = new Color(0.09411F, 0.54509F, 0.82745F, 0F);
         Color green = new Color(0.08627F, 0.82745F, 0.09804F, 0.15F);
         Color tile_floor = new Color(0.28627F, 0.12941F, 0.015686F,2F);
-        Color gray = new Color(0.5F, 0.5F, 0.5F, 0); //(0.5F, 0.5F, 0.5F, 0)
+        Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
         
         Vector3D light_pos = new Vector3D(-9, 10, -10);  
         Vector3D light_pos2 = new Vector3D(-4.5, 5, 10);
@@ -105,10 +103,9 @@ public class ProyectoRayTracing {
         double xamnt,yamnt;
         double[] tempRed, tempGreen, tempBlue;
         
-        for(int y=0;y < height ; y++){
-            for(int x=0; x < width ; x++){
+        for(int x = 0; x < width ; x++){
+            for(int y = 0;y < height ; y++){
                 
-                //start with a blank pixel 
                 tempRed = new double[aadepth*aadepth];
                 tempGreen = new double[aadepth*aadepth];
                 tempBlue = new double[aadepth*aadepth];
@@ -116,7 +113,7 @@ public class ProyectoRayTracing {
                 for(int aax = 0 ; aax < aadepth ; aax++){
                     for(int aay = 0 ; aay < aadepth ; aay++){
                         aa_index = aay*aadepth + aax;
-                        if(aadepth==1){
+                        if(true){
                             //start with no anti-aliasing
                             if (width>height){
                                 //the image is wider than it is tall
@@ -134,26 +131,7 @@ public class ProyectoRayTracing {
                                     yamnt = ((height-y)+0.5)/height;
                                 }
                             }
-                        }else{
-                            // - Anti alising
-                            if (width>height){
-                                //the image is wider than it is tall
-                                xamnt = ((x + (double)aax/((double)aadepth - 1))/width)*aspectratio-(((width-height)/(double)height)/2);
-                                yamnt = ((height - y) + (double)aax/((double)aadepth - 1))/height;
-                            }else{
-                                if (height>width){
-                                    //the image is taller than it is wide
-                                    xamnt = (x + (double)aax/((double)aadepth - 1))/width;
-                                    yamnt = (((height-y) + (double)aax/((double)aadepth - 1))/height)/aspectratio - (((height-width)/(double)width)/2);
-
-                                }else{
-                                    //the imagen is square
-                                    xamnt = (x + (double)aax/((double)aadepth - 1))/width;
-                                    yamnt = ((height - y) + (double)aax/((double)aadepth - 1))/height;
-                                }
-                            }
                         }
-                        
 
                         Vector3D cam_ray_origin = scene_cam.getCameraPos();
                         Vector3D cam_ray_direction = camdir.add(camright.mult(xamnt-0.5).add(camdown.mult(yamnt-0.5))).normalize();
@@ -163,13 +141,12 @@ public class ProyectoRayTracing {
                         ArrayList<Double> intersections = new ArrayList();
                         for(int index = 0 ; index < scene_objects.size(); index++){
                             Object o = scene_objects.get(index);
-                            intersections.add(o.findIntersection(cam_ray)); //Necesario importar clase para que funcione
+                            intersections.add(o.findIntersection(cam_ray));
                         }
 
                         int index_of_winning_object = winningObjectIndex(intersections);
 
                         if(index_of_winning_object == -1){
-                            //color = new Color(0, 0, 0, 0); 
                             //Dibuja background, Color Negro definido, por defecto
                             tempRed[aa_index] = 0;
                             tempGreen[aa_index] = 0;
@@ -214,9 +191,9 @@ public class ProyectoRayTracing {
                         
                 color.r = avgRed; color.g = avgGreen; color.b = avgBlue;
                         
-                y = height - y; // Parche: Para corregir el sentido en imagen dibujada
+                int ny = height - y; // Parche: Para corregir el sentido en imagen dibujada
 
-                if(y >= 0 && y < height)buffer.setRGB(x, y, color.toInteger()); //Dibuja en buffer, pregunta si y no excede limite (por parche)
+                if(ny >= 0 && ny < height)buffer.setRGB(x, ny, color.toInteger()); //Dibuja en buffer, pregunta si y no excede limite (por parche)
             }
         }
         
@@ -235,36 +212,24 @@ public class ProyectoRayTracing {
         
     }
     public static int winningObjectIndex(ArrayList<Double> object_intersections){
-        
-        //return the index of the winnig intersection 40:00
         int index_of_minimum_value = 0;
-        
-        //prevent unnessary calculations
         if(object_intersections.isEmpty()){
-            //if there are no intersections
             return -1;
         }else{
             if(object_intersections.size()==1){
                 if(object_intersections.get(0) > 0){
-                    //if that intersection is greater than zero then its our index of minimun value   
                     return 0;
                 }else{
-                    //otherwise the only intersection value is negative
                     return -1;
                 }
             }else{
-                //otherwise there is more than intersection
-                //first find the maximum value
-                
                 double max =0;
                 for (int algo = 0; algo<object_intersections.size() ; algo++){
                     if(max<object_intersections.get(algo)){
                         max = object_intersections.get(algo);
                     }
                 }
-                //then starting from the maximum value find the minimum positive
                 if (max >0){
-                    //we only want positive intersections
                     for(int indice = 0; indice<object_intersections.size() ; indice++){
                         if (object_intersections.get(indice) > 0 && object_intersections.get(indice) <= max){
                             max = object_intersections.get(indice);
@@ -273,7 +238,6 @@ public class ProyectoRayTracing {
                     }
                     return index_of_minimum_value;
                 }else{
-                    //all the intersections were negative
                     return -1;
                 }
             }
