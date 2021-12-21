@@ -23,7 +23,6 @@ public class Light extends Source{
         this.color = color;
     }
 
-    
     @Override
     public Color getLightColor(){
         return color;

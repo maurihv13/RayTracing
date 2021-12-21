@@ -13,10 +13,9 @@ public class Plane extends Object{
     public Vector3D normal;
     public double distance;
     
-
     public Plane() {
         normal = new Vector3D(1, 0, 0);
-        distance=0;
+        distance = 0;
         color= new Color(0.5F, 0.5F, 0.5F, 0);
     }
     

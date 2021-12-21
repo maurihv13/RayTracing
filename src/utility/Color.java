@@ -40,13 +40,6 @@ public class Color {
         special=color.special;
     }
     
-    /*public void add(Color color){
-        r += color.r;
-        g += color.g;
-        b += color.b;
-        //special += color.special;
-    }*/
-    
     public void divide(int scalar){
         r /= scalar;
         g /= scalar;
@@ -55,22 +48,6 @@ public class Color {
     
     public int toInteger(){
         return (int)(r*255)<<16|(int)(g*255)<<8|(int)(b*255);
-    }
-    
-    public void setColorRed(float redValue){
-        r = redValue;
-    }
-    
-    public void setColorGreen(float greenValue){
-        g = greenValue;
-    }
-    
-    public void setColorBlue(float blueValue){
-        b = blueValue;
-    }
-    
-    public void setColorSpecial(float specialValue){
-        special = specialValue;
     }
     
     public double brightness(){
@@ -111,20 +88,24 @@ public class Color {
         return new Color(r, g, b, special);
     }
 
-    public float getR() {
-        return r;
-    }
-
-    public float getG() {
-        return g;
-    }
-
-    public float getB() {
-        return b;
-    }
-
     public float getSpecial() {
         return special;
+    }
+    
+    public void setColorRed(float redValue){
+        r = redValue;
+    }
+    
+    public void setColorGreen(float greenValue){
+        g = greenValue;
+    }
+    
+    public void setColorBlue(float blueValue){
+        b = blueValue;
+    }
+    
+    public void setColorSpecial(float specialValue){
+        special = specialValue;
     }
     
 }

@@ -34,10 +34,9 @@ public class ProyectoRayTracing {
         
         
         int height, width;
-        height = 480;
-        width = 640;
+        height = 640;
+        width = 840;
         int aadepth = 4;
-        double aathreshold = 0.01;
         double aspectratio = (double)width/ (double)height; 
         double ambientlight = 0.2;
         double accuracy = 0.000001;
@@ -60,9 +59,10 @@ public class ProyectoRayTracing {
         Vector3D Y = new Vector3D(0, 1, 0);
         Vector3D Z = new Vector3D(0, 0, 1);
         
-        Vector3D new_sphere_location = new Vector3D(1.75, -0.5, 0);
+        Vector3D new_sphere_location = new Vector3D(1.5, -0.5, 0);
+        Vector3D big_sphere_location = new Vector3D(12, 3, 15);
         
-        Vector3D campos = new Vector3D(3, 1.5, -4); 
+        Vector3D campos = new Vector3D(-3, 1.5, -4); 
         
         Vector3D lookAt = new Vector3D(0,0,0);
         Vector3D diff_btw = new Vector3D(campos.x-lookAt.x,campos.y-lookAt.y,campos.z-lookAt.z);
@@ -75,25 +75,30 @@ public class ProyectoRayTracing {
         Camera scene_cam = new Camera(campos, camdir, camright, camdown);
         
         Color white_light = new Color(1.0F, 1.0F, 1.0F, 0);
-        Color pretty_green = new Color(0.5F, 1.0F, 0.5F, 0.3F);
-        Color maroon = new Color(0.5F, 0.25F, 0.25F, 0);
-        Color tile_floor = new Color(1,1,1,2);
-        Color gray = new Color(0.5F, 0.5F, 0.5F, 0);
-        Color black = new Color(0.0F,0.0F,0.0F,0);
+        Color pretty_red = new Color(0.79607F, 0.0F, 0.0F, 0.3F);
+        Color cyan = new Color(0.09411F, 0.54509F, 0.82745F, 0F);
+        Color green = new Color(0.08627F, 0.82745F, 0.09804F, 0.15F);
+        Color tile_floor = new Color(0.28627F, 0.12941F, 0.015686F,2F);
+        Color gray = new Color(0.5F, 0.5F, 0.5F, 0); //(0.5F, 0.5F, 0.5F, 0)
         
         Vector3D light_pos = new Vector3D(-9, 10, -10);  
+        Vector3D light_pos2 = new Vector3D(-4.5, 5, 10);
         Light scene_light = new Light(light_pos, white_light);
+        Light scene_light2 = new Light(light_pos2, gray);
         ArrayList<Source> light_sources = new ArrayList<>(); //Guarda luces de escena
         light_sources.add(scene_light);
+        light_sources.add(scene_light2);
         
         //Objetos de la escena
-        Sphere scene_sphere = new Sphere(O, 1, pretty_green);
-        Sphere scene_sphere2 = new Sphere(new_sphere_location, 0.5, maroon);
+        Sphere scene_sphere = new Sphere(O, 1, pretty_red);
+        Sphere scene_sphere2 = new Sphere(new_sphere_location, 0.5, cyan);
+        Sphere big_sphere = new Sphere(big_sphere_location, 4, green);
         Plane scene_plane = new Plane(Y, -1,tile_floor);
         
         ArrayList<Object> scene_objects = new ArrayList<>();
         scene_objects.add(scene_sphere);
         scene_objects.add(scene_sphere2);
+        scene_objects.add(big_sphere);
         scene_objects.add(scene_plane);
         
         int aa_index;
@@ -151,7 +156,7 @@ public class ProyectoRayTracing {
                         
 
                         Vector3D cam_ray_origin = scene_cam.getCameraPos();
-                        Vector3D cam_ray_direction= camdir.add(camright.mult(xamnt-0.5).add(camdown.mult(yamnt-0.5))).normalize();
+                        Vector3D cam_ray_direction = camdir.add(camright.mult(xamnt-0.5).add(camdown.mult(yamnt-0.5))).normalize();
 
                         Ray cam_ray = new Ray(cam_ray_origin,cam_ray_direction);
 
@@ -227,11 +232,7 @@ public class ProyectoRayTracing {
         long end = System.nanoTime();
         System.out.println("Loop Time: "+ (end-start)/1000000000.0F);
         
-        /*
-        delete pixels;
-        t2 = clock();
-        float diff ((float)t2-(float)t1)/1000;
-        */
+        
     }
     public static int winningObjectIndex(ArrayList<Double> object_intersections){
         
@@ -281,17 +282,14 @@ public class ProyectoRayTracing {
     
     public static Color getColorAt(Vector3D intersection_position, Vector3D intersecting_ray_direction, ArrayList<Object> scene_objects, int index_of_winning_object, ArrayList<Source> light_sources, double accuracy, double ambientlight){
         //Es la forma de implementar sombras y efectos de luz.
-        Color winning_object_color = scene_objects.get(index_of_winning_object).getColor();
+        Color winning_object_color = new Color(scene_objects.get(index_of_winning_object).getColor());
         Vector3D winning_object_normal = scene_objects.get(index_of_winning_object).getNormalAt(intersection_position);
         
         if(winning_object_color.getSpecial()==2){
             //checkored/title floor pattern
             int square = (int) Math.floor(intersection_position.x)+(int) Math.floor(intersection_position.z);
             if ((square % 2)==0){
-                //cuadro negro
-                winning_object_color.setColorRed(0);
-                winning_object_color.setColorGreen(0);
-                winning_object_color.setColorBlue(0);
+                //conserva su color
             }else{
                 //cuadro blanco
                 winning_object_color.setColorRed(1);

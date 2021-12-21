@@ -42,7 +42,6 @@ public class Vector3D {
         return x*vector.x + y*vector.y + z*vector.z;
     }
     
-    
     public Vector3D normalize(){
         Vector3D res;
         double magnitude = Math.sqrt(x*x + y*y + z*z);
@@ -54,10 +53,6 @@ public class Vector3D {
         return res;
     }
     
-    /*public double getVectX(){return x;}
-    public double getVecty(){return y;}
-    public double getVectZ(){return z;}
-    */
     public Vector3D negative(){
         return new Vector3D(-x, -y, -z);
     }
